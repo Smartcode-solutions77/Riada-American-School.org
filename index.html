@@ -1,0 +1,716 @@
+<title>Faculty Registry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #eeece3;
+    --surface: #faf9f4;
+    --surface-raised: #ffffff;
+    --ink: #182238;
+    --ink-secondary: #4b5568;
+    --muted: #83889a;
+    --line: rgba(24,34,56,0.13);
+    --line-strong: rgba(24,34,56,0.24);
+    --navy: #182238;
+    --navy-deep: #0f1626;
+    --accent: #a9781f;
+    --accent-ink: #4a3608;
+    --accent-soft: #f0e2bd;
+    --accent-soft-line: rgba(169,120,31,0.35);
+    --good: #0ca30c;
+
+    --dept-1: #2a78d6; /* High School */
+    --dept-2: #eb6834; /* Middle School */
+    --dept-3: #1baf7a; /* Upper Elementary */
+    --dept-4: #d69200; /* Lower Elementary */
+    --dept-5: #d1608c; /* Pre-K */
+    --dept-6: #147a14; /* Administration */
+
+    --shadow-card: 0 1px 2px rgba(15,22,38,0.06), 0 6px 20px -8px rgba(15,22,38,0.16);
+    --shadow-pop: 0 12px 40px -12px rgba(15,22,38,0.35);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --paper: #0f1420;
+      --surface: #161d2d;
+      --surface-raised: #1c2437;
+      --ink: #f1efe6;
+      --ink-secondary: #c4c9d6;
+      --muted: #8891a3;
+      --line: rgba(255,255,255,0.11);
+      --line-strong: rgba(255,255,255,0.2);
+      --navy: #0b1120;
+      --navy-deep: #060a14;
+      --accent: #e0b563;
+      --accent-ink: #241a04;
+      --accent-soft: rgba(224,181,99,0.16);
+      --accent-soft-line: rgba(224,181,99,0.4);
+      --good: #2fc42f;
+
+      --dept-1: #3987e5;
+      --dept-2: #e07440;
+      --dept-3: #26bd8a;
+      --dept-4: #e2a325;
+      --dept-5: #e07ba1;
+      --dept-6: #2fa32f;
+
+      --shadow-card: 0 1px 2px rgba(0,0,0,0.3), 0 10px 30px -10px rgba(0,0,0,0.55);
+      --shadow-pop: 0 16px 50px -14px rgba(0,0,0,0.7);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --paper: #0f1420;
+    --surface: #161d2d;
+    --surface-raised: #1c2437;
+    --ink: #f1efe6;
+    --ink-secondary: #c4c9d6;
+    --muted: #8891a3;
+    --line: rgba(255,255,255,0.11);
+    --line-strong: rgba(255,255,255,0.2);
+    --navy: #0b1120;
+    --navy-deep: #060a14;
+    --accent: #e0b563;
+    --accent-ink: #241a04;
+    --accent-soft: rgba(224,181,99,0.16);
+    --accent-soft-line: rgba(224,181,99,0.4);
+    --good: #2fc42f;
+
+    --dept-1: #3987e5;
+    --dept-2: #e07440;
+    --dept-3: #26bd8a;
+    --dept-4: #e2a325;
+    --dept-5: #e07ba1;
+    --dept-6: #2fa32f;
+
+    --shadow-card: 0 1px 2px rgba(0,0,0,0.3), 0 10px 30px -10px rgba(0,0,0,0.55);
+    --shadow-pop: 0 16px 50px -14px rgba(0,0,0,0.7);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Public Sans", -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent-soft); }
+
+  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; text-wrap: balance; margin: 0; }
+
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 28px 80px; }
+
+  /* ---------- Masthead ---------- */
+  .masthead {
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color: #f1efe6;
+    padding: 40px 28px 46px;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::after {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(224,181,99,0.05) 0 1px, transparent 1px 84px);
+    pointer-events: none;
+  }
+  .masthead-inner { max-width: 1240px; margin: 0 auto; position: relative; }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #e0b563;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 22px; height: 1px;
+    background: #e0b563;
+  }
+  .masthead h1 {
+    font-size: clamp(34px, 4.6vw, 52px);
+    font-weight: 600;
+    color: #fbfaf6;
+    line-height: 1.04;
+  }
+  .masthead p.lede {
+    margin: 16px 0 0;
+    max-width: 620px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: #b9bfd1;
+  }
+  .masthead-meta {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: #8891a3;
+  }
+  .masthead-meta b { color: #e0b563; font-weight: 500; }
+
+  /* ---------- Stat tiles ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: -34px;
+    position: relative;
+    z-index: 2;
+  }
+  .stat-tile {
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow-card);
+  }
+  .stat-tile .label {
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .stat-tile .value {
+    font-family: "IBM Plex Mono", monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: 8px;
+    line-height: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .stat-tile .value .unit { font-size: 14px; color: var(--muted); font-weight: 500; }
+  .stat-tile .sub { margin-top: 6px; font-size: 12.5px; color: var(--ink-secondary); }
+  .stat-tile.accent { border-color: var(--accent-soft-line); background: linear-gradient(180deg, var(--accent-soft), var(--surface-raised) 65%); }
+
+  /* ---------- Section framing ---------- */
+  section.block { margin-top: 44px; }
+  .block-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .block-head h2 { font-size: 21px; font-weight: 600; color: var(--ink); }
+  .block-head .block-note { font-size: 12.5px; color: var(--muted); font-family: "IBM Plex Mono", monospace; }
+
+  /* ---------- Charts ---------- */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 16px;
+  }
+  .chart-card {
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 22px 16px;
+    box-shadow: var(--shadow-card);
+  }
+  .chart-card h3 { font-size: 14.5px; font-weight: 600; color: var(--ink); font-family: "Public Sans", sans-serif; }
+  .chart-card .chart-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .chart-body { margin-top: 14px; }
+
+  .bar-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; }
+  .bar-row .bar-label {
+    width: 140px; flex-shrink: 0;
+    font-size: 12.5px; color: var(--ink-secondary); font-weight: 500;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .bar-track { flex: 1; height: 20px; background: var(--paper); border-radius: 5px; overflow: hidden; position: relative; }
+  .bar-fill {
+    height: 100%; border-radius: 5px;
+    display: flex; align-items: center; justify-content: flex-end;
+    padding-right: 8px;
+    transition: width 0.5s cubic-bezier(.2,.7,.3,1);
+    cursor: default;
+  }
+  .bar-fill span {
+    font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 600;
+    color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  }
+  .bar-row:hover .bar-track { outline: 1px solid var(--line-strong); }
+
+  .hist-wrap { display: flex; align-items: flex-end; gap: 8px; height: 168px; padding-top: 8px; }
+  .hist-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 6px; }
+  .hist-bar {
+    width: 100%; border-radius: 4px 4px 2px 2px;
+    background: var(--accent);
+    position: relative;
+    min-height: 3px;
+    transition: height 0.5s cubic-bezier(.2,.7,.3,1);
+  }
+  .hist-count {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 600; color: var(--ink);
+  }
+  .hist-label { font-size: 10.5px; color: var(--muted); text-align: center; line-height: 1.25; font-family: "IBM Plex Mono", monospace; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 16px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--ink-secondary); }
+  .legend-dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ---------- Filters ---------- */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow-card);
+  }
+  .search-box {
+    display: flex; align-items: center; gap: 8px;
+    flex: 1 1 240px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 9px 12px;
+  }
+  .search-box svg { flex-shrink: 0; color: var(--muted); }
+  .search-box input {
+    border: none; background: transparent; outline: none;
+    font-family: inherit; font-size: 13.5px; color: var(--ink); width: 100%;
+  }
+  .search-box input::placeholder { color: var(--muted); }
+
+  .dept-chip {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    font-weight: 500;
+    padding: 7px 12px 7px 10px;
+    border-radius: 100px;
+    border: 1px solid var(--line);
+    background: var(--surface-raised);
+    color: var(--ink-secondary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: border-color .15s, color .15s, background .15s;
+    user-select: none;
+  }
+  .dept-chip .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .dept-chip:hover { border-color: var(--line-strong); }
+  .dept-chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  :root[data-theme="dark"] .dept-chip.active,
+  @media (prefers-color-scheme: dark) { }
+
+  select.sort-select {
+    font-family: "Public Sans", sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 9px 30px 9px 12px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2383889a' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+
+  .result-count { font-size: 12px; color: var(--muted); font-family: "IBM Plex Mono", monospace; white-space: nowrap; }
+
+  /* ---------- Table ---------- */
+  .table-card {
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    margin-top: 14px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  table.registry { width: 100%; border-collapse: collapse; }
+  table.registry thead th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    font-weight: 600;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+    position: sticky; top: 0;
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+  }
+  table.registry thead th:hover { color: var(--ink-secondary); }
+  table.registry thead th .sort-arrow { font-size: 9px; margin-left: 4px; opacity: 0.5; }
+  table.registry thead th.active-sort .sort-arrow { opacity: 1; color: var(--accent); }
+  table.registry tbody tr.teacher-row {
+    cursor: pointer;
+    border-bottom: 1px solid var(--line);
+  }
+  table.registry tbody tr.teacher-row:hover { background: var(--surface); }
+  table.registry tbody tr.teacher-row.open { background: var(--surface); }
+  table.registry td { padding: 12px 16px; font-size: 13.5px; color: var(--ink-secondary); vertical-align: middle; }
+  table.registry td.name-cell { color: var(--ink); font-weight: 600; }
+  table.registry td.name-cell .sub-line { font-weight: 400; color: var(--muted); font-size: 11.5px; margin-top: 2px; }
+  table.registry td.num { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .dept-chip-cell {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11.5px; font-family: "IBM Plex Mono", monospace;
+    color: var(--ink-secondary);
+  }
+  .dept-chip-cell .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .caret { color: var(--muted); font-size: 11px; transition: transform .18s; display: inline-block; width: 14px; }
+  tr.teacher-row.open .caret { transform: rotate(90deg); color: var(--accent); }
+
+  tr.detail-row td { padding: 0; border-bottom: 1px solid var(--line); }
+  .detail-inner {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .22s ease;
+  }
+  tr.detail-row.open .detail-inner { grid-template-rows: 1fr; }
+  .detail-content { overflow: hidden; }
+  .detail-pad { padding: 4px 16px 20px 44px; }
+  .timeline { position: relative; margin-top: 8px; }
+  .tl-item {
+    position: relative;
+    padding: 10px 0 10px 22px;
+    border-left: 2px solid var(--line);
+  }
+  .tl-item:last-child { border-left-color: transparent; }
+  .tl-item::before {
+    content: "";
+    position: absolute; left: -6px; top: 13px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--surface-raised);
+    border: 2px solid var(--muted);
+  }
+  .tl-item.is-ras::before { border-color: var(--accent); background: var(--accent); }
+  .tl-item .tl-school { font-weight: 600; color: var(--ink); font-size: 13.5px; }
+  .tl-item .tl-ras-tag {
+    font-family: "IBM Plex Mono", monospace; font-size: 9.5px; font-weight: 600;
+    color: var(--accent-ink); background: var(--accent-soft); border: 1px solid var(--accent-soft-line);
+    padding: 1px 6px; border-radius: 100px; margin-left: 8px; letter-spacing: 0.04em; text-transform: uppercase;
+    vertical-align: middle;
+  }
+  .tl-item .tl-job { font-size: 12.5px; color: var(--ink-secondary); margin-top: 1px; }
+  .tl-item .tl-dates { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  .empty-state { padding: 60px 20px; text-align: center; color: var(--muted); font-size: 13.5px; }
+
+  footer {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--muted);
+    font-family: "IBM Plex Mono", monospace;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+
+  @media (max-width: 880px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .charts-grid { grid-template-columns: 1fr; }
+    table.registry thead th:nth-child(3),
+    table.registry td:nth-child(3) { display: none; }
+  }
+</style>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="eyebrow">Riada American School &middot; Internal Registry</div>
+    <h1>Faculty Registry</h1>
+    <p class="lede">Every teacher and staff member's career history, sourced from the "Teacher Information Update Form — Years of Experience," searchable and filterable in one place instead of scattered across a spreadsheet.</p>
+    <div class="masthead-meta">
+      <span><b id="metaCount">—</b> records on file</span>
+      <span>Sourced from Google Form responses</span>
+      <span>Updated <b id="metaDate">—</b></span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="stats" id="statTiles"></div>
+
+  <section class="block">
+    <div class="block-head">
+      <h2>Staffing at a glance</h2>
+      <span class="block-note">6 departments &middot; 111 records</span>
+    </div>
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Headcount by department</h3>
+        <div class="chart-sub">Number of staff currently placed in each department</div>
+        <div class="chart-body" id="deptChart"></div>
+      </div>
+      <div class="chart-card">
+        <h3>Total experience distribution</h3>
+        <div class="chart-sub">Career-long years of experience, across all staff</div>
+        <div class="hist-wrap" id="histChart"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-head">
+      <h2>Look up a staff member</h2>
+      <span class="result-count" id="resultCount"></span>
+    </div>
+    <div class="filter-bar">
+      <div class="search-box">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="searchInput" placeholder="Search by name, subject, or school…">
+      </div>
+      <div id="deptChips" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
+      <select class="sort-select" id="sortSelect">
+        <option value="totalYears-desc">Sort: Total experience (high→low)</option>
+        <option value="totalYears-asc">Sort: Total experience (low→high)</option>
+        <option value="yearsAtRAS-desc">Sort: Years at RAS (high→low)</option>
+        <option value="name-asc">Sort: Name (A→Z)</option>
+        <option value="department-asc">Sort: Department</option>
+      </select>
+    </div>
+
+    <div class="table-card">
+      <table class="registry">
+        <thead>
+          <tr>
+            <th data-sort="name">Name <span class="sort-arrow">▾</span></th>
+            <th data-sort="subject">Subject <span class="sort-arrow">▾</span></th>
+            <th data-sort="department">Department <span class="sort-arrow">▾</span></th>
+            <th data-sort="yearsAtRAS">Years at RAS <span class="sort-arrow">▾</span></th>
+            <th data-sort="totalYears">Total experience <span class="sort-arrow">▾</span></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div class="empty-state" id="emptyState" style="display:none;">No staff match those filters.</div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Faculty Registry &middot; Riada American School &middot; internal use only</span>
+    <span>Prepared by Nevine Asfour</span>
+  </footer>
+</div>
+
+<script>
+const TEACHERS = [{"name":"Hala elmoshrefi","subject":"Adminstration","department":"","currentSchool":"Riada american","currentJob":"School secertary","currentSince":"1/9/2015","yearsAtRAS":11.0,"totalYears":11.0,"numPreviousSchools":0,"history":[{"school":"Riada american","job":"School secertary","from":"1/9/2015","to":"1/9/2026","years":11.0,"isRAS":true}]},{"name":"Noureen Amin Ahmed","subject":"English","department":"Pre –K","currentSchool":"RAS","currentJob":"Learning support teacher","currentSince":"2020","yearsAtRAS":7.0,"totalYears":7.0,"numPreviousSchools":0,"history":[{"school":"RAS","job":"Learning support teacher","from":"2020","to":"2026","years":7.0,"isRAS":true}]},{"name":"Aya atef shehata mohamed","subject":"Adminstration","department":"Adminstration","currentSchool":"Riada American school","currentJob":"Receptionist","currentSince":"2017","yearsAtRAS":9.0,"totalYears":9.0,"numPreviousSchools":0,"history":[{"school":"Riada American school","job":"Receptionist","from":"2017","to":"2026","years":9.0,"isRAS":true}]},{"name":"Asmaa Emad Elgindy","subject":"Adminstration","department":"Adminstration","currentSchool":"Riada American School","currentJob":"Assessment Coordinator","currentSince":"Sep 2020","yearsAtRAS":6.0,"totalYears":7.0,"numPreviousSchools":2,"history":[{"school":"Riada American School","job":"Assessment Coordinator","from":"Sep 2020","to":"Present","years":6.0,"isRAS":true},{"school":"Kawmeya American School","job":"Assessment coordinator","from":"March 2019","to":"Sep 2020","years":1.0,"isRAS":false},{"school":"AMIDEAST","job":"Senior testing coordinator","from":"May 2006","to":"March 2019","years":null,"isRAS":false}]},{"name":"Christina wagdy fawzy","subject":"Arabic/Religion","department":"Middle School Dep","currentSchool":"Riada American school","currentJob":"مدرس دين مسيحى","currentSince":"2016","yearsAtRAS":10.0,"totalYears":10.0,"numPreviousSchools":3,"history":[{"school":"Riada American school","job":"مدرس دين مسيحى","from":"2016","to":"2026","years":10.0,"isRAS":true},{"school":".","job":".","from":".","to":".","years":null,"isRAS":false},{"school":".","job":".","from":"","to":"","years":null,"isRAS":false},{"school":".","job":".","from":".","to":".","years":null,"isRAS":false}]},{"name":"Wael Kamal Abdelmaksoud Gouda","subject":"Computer","department":"High School Dep","currentSchool":"Riada American School","currentJob":"A.P, HOS & teacher","currentSince":"1st, September 2005","yearsAtRAS":21.0,"totalYears":21.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"A.P, HOS & teacher","from":"1st, September 2005","to":"Present","years":21.0,"isRAS":true}]},{"name":"Jillan Hussein Mostafa ElHabbak","subject":"Robotics","department":"Lower Elementary","currentSchool":"Sidi Gaber Language School for boys","currentJob":"Computer Teacher","currentSince":"2023","yearsAtRAS":0,"totalYears":2.0,"numPreviousSchools":0,"history":[{"school":"Sidi Gaber Language School for boys","job":"Computer Teacher","from":"2023","to":"2025","years":2.0,"isRAS":false}]},{"name":"Kholoud Hasehm abdelaziz ali","subject":"N.S","department":"Middle School Dep","currentSchool":"Riada American school","currentJob":"National studies teacher","currentSince":"2021","yearsAtRAS":4.0,"totalYears":7.0,"numPreviousSchools":3,"history":[{"school":"Riada American school","job":"National studies teacher","from":"2021","to":"2024","years":4.0,"isRAS":true},{"school":"Gems academy Alexandria","job":"National studies teacher","from":"2024","to":"2025","years":1.0,"isRAS":false},{"school":"Everest international school","job":"Nantional studies teacher","from":"2019","to":"2021","years":null,"isRAS":false},{"school":"IBSA ( international schools of Egypt ISE)& Egypt Modern School","job":"National studies teacher","from":"2017","to":"2021","years":2.0,"isRAS":false}]},{"name":"Shaimaa taha mohamed radwan","subject":"Adminstration","department":"Adminstration","currentSchool":"Riada American school","currentJob":"Lab assistant","currentSince":"2009","yearsAtRAS":17.0,"totalYears":21.0,"numPreviousSchools":2,"history":[{"school":"Riada American school","job":"Lab assistant","from":"2009","to":"2026","years":17.0,"isRAS":true},{"school":"House of English","job":"Lab assistant","from":"2004","to":"2008","years":4.0,"isRAS":false},{"school":"Riada language school","job":"Lab assistant","from":"2003","to":"2004","years":null,"isRAS":false}]},{"name":"Riham Moustafa Mansour Ibrahim Mansour","subject":"French","department":"High School Dep","currentSchool":"Riada American","currentJob":"French teacher","currentSince":"2012","yearsAtRAS":14.0,"totalYears":14.0,"numPreviousSchools":3,"history":[{"school":"Riada American","job":"French teacher","from":"2012","to":"Till now 2026","years":14.0,"isRAS":true},{"school":"N/A","job":"N/A","from":"0","to":"0","years":0.0,"isRAS":false},{"school":"N/A","job":"N/A","from":"0","to":"0","years":null,"isRAS":false},{"school":"N/A","job":"N/A","from":"0","to":"0","years":0.0,"isRAS":false}]},{"name":"Rania Muhammad elsayed Morsy","subject":"Art","department":"Upper Elementary Dep","currentSchool":"Riada American School","currentJob":"Art Teacher","currentSince":"2024","yearsAtRAS":2.0,"totalYears":15.0,"numPreviousSchools":1,"history":[{"school":"Riada American School","job":"Art Teacher","from":"2024","to":"2026","years":2.0,"isRAS":true},{"school":"Alexandria Montessori","job":"Form Teacher","from":"2010","to":"2023","years":13.0,"isRAS":false}]},{"name":"Nada Fahmy Mohamed","subject":"Adminstration","department":"Upper Elementary Dep","currentSchool":"Riada American School","currentJob":"Administrative Assistant","currentSince":"2011","yearsAtRAS":16.0,"totalYears":16.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"Administrative Assistant","from":"2011","to":"2026","years":16.0,"isRAS":true}]},{"name":"Passant Nabil Ahmed said","subject":"Adminstration","department":"Upper Elementary Dep","currentSchool":"Riada American school","currentJob":"Floor supervisor","currentSince":"2018","yearsAtRAS":9.0,"totalYears":9.0,"numPreviousSchools":0,"history":[{"school":"Riada American school","job":"Floor supervisor","from":"2018","to":"2026","years":9.0,"isRAS":true}]},{"name":"Nihal ElAwady","subject":"Art","department":"High School Dep","currentSchool":"RAS","currentJob":"Senior art teacher","currentSince":"2010","yearsAtRAS":17.0,"totalYears":34.0,"numPreviousSchools":3,"history":[{"school":"RAS","job":"Senior art teacher","from":"2010","to":"2026","years":17.0,"isRAS":true},{"school":"Non","job":"Senior art teacher","from":"2010","to":"2026","years":17.0,"isRAS":false},{"school":"Non","job":"-","from":"-","to":"-","years":null,"isRAS":false},{"school":"-","job":"-","from":"-","to":"-","years":null,"isRAS":false}]},{"name":"Injy El Greatly","subject":"Science","department":"Middle School Dep","currentSchool":"Riada American School","currentJob":"Science Teacher","currentSince":"2017","yearsAtRAS":3.0,"totalYears":7.0,"numPreviousSchools":3,"history":[{"school":"Riada American School","job":"Science Teacher","from":"2017","to":"2018","years":1.0,"isRAS":true},{"school":"GEMS","job":"Science Teacher","from":"2019","to":"2020","years":1.0,"isRAS":false},{"school":"Forsan American School","job":"Homeroom Teacher","from":"2020","to":"2023","years":3.0,"isRAS":false},{"school":"Bright Horizon Academy and Riada American School","job":"Science Teacher and Science Coordinator","from":"2024","to":"Present (2026)","years":2.0,"isRAS":true}]},{"name":"Ingy Hassan Saad","subject":"English","department":"Upper Elementary Dep","currentSchool":"RAS","currentJob":"English Teacher & Coordinator","currentSince":"2012","yearsAtRAS":14.0,"totalYears":17.0,"numPreviousSchools":1,"history":[{"school":"RAS","job":"English Teacher & Coordinator","from":"2012","to":"2026","years":14.0,"isRAS":true},{"school":"El Quds International School","job":"English teacher","from":"2004","to":"2006","years":3.0,"isRAS":false}]},{"name":"Habiba Amr Yakout","subject":"Computer","department":"Lower Elementary","currentSchool":"Riada American School","currentJob":"Computer Teacher","currentSince":"Sep. 2024","yearsAtRAS":2.0,"totalYears":2.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"Computer Teacher","from":"Sep. 2024","to":"Present","years":2.0,"isRAS":true}]},{"name":"Noha Ahmed Mostafa Kamal ElKady","subject":"Adminstration","department":"Adminstration","currentSchool":"Riada American School","currentJob":"Assistant of Assistant Principal for Curriculum and Instruction","currentSince":"9/2023","yearsAtRAS":3.0,"totalYears":3.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"Assistant of Assistant Principal for Curriculum and Instruction","from":"9/2023","to":"Now","years":3.0,"isRAS":true}]},{"name":"Ahmed Wahid Said Ibrahim","subject":"P.E","department":"Pre –K","currentSchool":"Riada American School","currentJob":"PE Teacher","currentSince":"2016","yearsAtRAS":10.0,"totalYears":20.0,"numPreviousSchools":1,"history":[{"school":"Riada American School","job":"PE Teacher","from":"2016","to":"2026","years":10.0,"isRAS":true},{"school":"Kaumeya (American/British/National) School","job":"PE Teacher","from":"2006","to":"2016","years":10.0,"isRAS":false}]},{"name":"Noha Ahmed Attia","subject":"Science","department":"Lower Elementary","currentSchool":"Riada American school","currentJob":"Science Teacher","currentSince":"2026","yearsAtRAS":5.0,"totalYears":10.0,"numPreviousSchools":1,"history":[{"school":"Riada American school","job":"Science Teacher","from":"2026","to":".","years":5.0,"isRAS":true},{"school":"Brilliance language school","job":"Science Teacher","from":"2020","to":"2025","years":5.0,"isRAS":false}]},{"name":"Ezzeldeen Ahmed","subject":"Math","department":"Middle School Dep","currentSchool":"Riada American School","currentJob":"Math teacher","currentSince":"2025","yearsAtRAS":1.0,"totalYears":6.0,"numPreviousSchools":2,"history":[{"school":"Riada American School","job":"Math teacher","from":"2025","to":"Present","years":1.0,"isRAS":true},{"school":"Pioneers Olympic School","job":"Math teacher","from":"2020","to":"2025","years":5.0,"isRAS":false},{"school":"Pioneers generation school","job":"Math teacher (part time)","from":"2024","to":"2025","years":null,"isRAS":false}]},{"name":"Howaida Osman","subject":"Music","department":"Upper Elementary Dep","currentSchool":"Ryada American school","currentJob":"Music teacher","currentSince":"10_2025","yearsAtRAS":1.0,"totalYears":10.0,"numPreviousSchools":3,"history":[{"school":"Ryada American school","job":"Music teacher","from":"10_2025","to":"Till Now","years":1.0,"isRAS":true},{"school":"Future school","job":"Music teacher","from":"2005","to":"2011","years":6.0,"isRAS":false},{"school":"European International school IG","job":"Music coordinator","from":"2013","to":"2015","years":2.0,"isRAS":false},{"school":"1.Princess & 2.Delta & 3.Harvard","job":"Music coordinator","from":"1/2015 2/ 2017 3/ 2020","to":"1/ 2017 2/ 2020 3/ 2025","years":1.0,"isRAS":false}]},{"name":"Rowan yasser","subject":"Art","department":"Middle School Dep","currentSchool":"Riada american school","currentJob":"Art teacher","currentSince":"2020/2021","yearsAtRAS":6.0,"totalYears":10.0,"numPreviousSchools":2,"history":[{"school":"Riada american school","job":"Art teacher","from":"2020/2021","to":"2026/2027","years":6.0,"isRAS":true},{"school":"Egypt british international school ,cairo","job":"Art teacher","from":"2016/2017","to":"2017/2018","years":2.0,"isRAS":false},{"school":"Antoniadis international school","job":"Art teacher","from":"2018/2019","to":"2019/2020","years":2.0,"isRAS":false}]},{"name":"Nihal sobhy tawfik","subject":"Adminstration","department":"Lower Elementary","currentSchool":"RAS","currentJob":"Admin assistant","currentSince":"2025","yearsAtRAS":1.0,"totalYears":2.0,"numPreviousSchools":1,"history":[{"school":"RAS","job":"Admin assistant","from":"2025","to":"202u","years":1.0,"isRAS":true},{"school":"Egypt modern school","job":"English teacher","from":"2007","to":"2008","years":1.0,"isRAS":false}]},{"name":"Mohab Mohamed abdel fattah","subject":"Arabic/Religion","department":"Middle School Dep","currentSchool":"R A S","currentJob":"Arabic teacher","currentSince":"2025","yearsAtRAS":1.0,"totalYears":5.0,"numPreviousSchools":2,"history":[{"school":"R A S","job":"Arabic teacher","from":"2025","to":"2026","years":1.0,"isRAS":true},{"school":"Pioneers Olympic","job":"Arabic teacher","from":"2022","to":"2025","years":3.0,"isRAS":false},{"school":"El sayda aisha","job":"Arabic teacher","from":"2021","to":"2022","years":1.0,"isRAS":false}]},{"name":"Donia Elsayed Taqqei","subject":"Math","department":"Middle School Dep","currentSchool":"Riada American School","currentJob":"Middle math teacher","currentSince":"2025","yearsAtRAS":1.0,"totalYears":7.0,"numPreviousSchools":1,"history":[{"school":"Riada American School","job":"Middle math teacher","from":"2025","to":"Present","years":1.0,"isRAS":true},{"school":"Egyptian American school","job":"Middle math teacher","from":"2019","to":"2025","years":6.0,"isRAS":false}]},{"name":"Sherin Fouad Sharabi","subject":"Science","department":"High School Dep","currentSchool":"Riada American School","currentJob":"Biology Teacher","currentSince":"2016","yearsAtRAS":10.0,"totalYears":21.0,"numPreviousSchools":1,"history":[{"school":"Riada American School","job":"Biology Teacher","from":"2016","to":"2026","years":10.0,"isRAS":true},{"school":"Manarat Al-Riyadh International Schools","job":"Biology Teacher","from":"2000","to":"2011","years":11.0,"isRAS":false}]},{"name":"Eman Sherif El-Assar","subject":"Humanities & Social Sciences","department":"Lower Elementary","currentSchool":"House of English","currentJob":"English teacher","currentSince":"2014","yearsAtRAS":0,"totalYears":6.0,"numPreviousSchools":1,"history":[{"school":"House of English","job":"English teacher","from":"2014","to":"2018","years":5.0,"isRAS":false},{"school":"House of English","job":"Math Teacher","from":"2019","to":"2020","years":1.0,"isRAS":false}]},{"name":"Norhan Tharwat Moustafa Khater","subject":"Adminstration","department":"Middle School Dep","currentSchool":"Riada American School","currentJob":"Middle School Secretary","currentSince":"September 2015","yearsAtRAS":12.0,"totalYears":12.0,"numPreviousSchools":3,"history":[{"school":"Riada American School","job":"Middle School Secretary","from":"September 2015","to":"Till present (2026)","years":12.0,"isRAS":true},{"school":"None","job":"None","from":"None","to":"None","years":null,"isRAS":false},{"school":"None","job":"None","from":"None","to":"None","years":null,"isRAS":false},{"school":"None","job":"None","from":"None","to":"None","years":null,"isRAS":false}]},{"name":"Sara Ahmed Mohab Abbas","subject":"English","department":"Pre –K","currentSchool":"Riada American School","currentJob":"Teacher","currentSince":"2018","yearsAtRAS":8.0,"totalYears":13.0,"numPreviousSchools":2,"history":[{"school":"Riada American School","job":"Teacher","from":"2018","to":"2026","years":8.0,"isRAS":true},{"school":"International Liberty School","job":"Teacher","from":"2014","to":"2018","years":4.0,"isRAS":false},{"school":"Taymour English School","job":"Teacher","from":"2013","to":"2014","years":1.0,"isRAS":false}]},{"name":"Rowan Ahmed Elgebaly","subject":"Math","department":"Middle School Dep","currentSchool":"Riada American School","currentJob":"Math Teacher","currentSince":"2020","yearsAtRAS":4.0,"totalYears":6.0,"numPreviousSchools":1,"history":[{"school":"Riada American School","job":"Math Teacher","from":"2020","to":"2024","years":4.0,"isRAS":true},{"school":"Franklin Academy Pembroke Pines, FL., USA","job":"Math teacher","from":"2024","to":"2026","years":2.0,"isRAS":false}]},{"name":"Shaimaa Ismail Abdel Aziz Hassan Eid","subject":"Adminstration","department":"High School Dep","currentSchool":"Riada American School","currentJob":"Floor supervisor","currentSince":"2018","yearsAtRAS":9.0,"totalYears":9.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"Floor supervisor","from":"2018","to":"2026","years":9.0,"isRAS":true}]},{"name":"Madleen Ragy Mackenzie","subject":"Science","department":"Middle School Dep","currentSchool":"Riada American School","currentJob":"Middle School Science Teacher","currentSince":"2025","yearsAtRAS":0,"totalYears":5.0,"numPreviousSchools":3,"history":[{"school":"Riada American School","job":"Middle School Science Teacher","from":"2025","to":"Till now","years":null,"isRAS":true},{"school":"American School of Alexandria","job":"High School Chemistry Teacher","from":"2024","to":"2025","years":1.0,"isRAS":false},{"school":"Liberty International School","job":"High School Chemistry Teacher","from":"2021","to":"2024","years":3.0,"isRAS":false},{"school":"City International School","job":"IGCSE Chemistry Co-teacher","from":"2020","to":"2021","years":1.0,"isRAS":false}]},{"name":"Doaa Mohamed Fahmy Korayem","subject":"English","department":"High School Dep","currentSchool":"Riada American School","currentJob":"English teacher and Head of Subject","currentSince":"1/9/2011","yearsAtRAS":15.0,"totalYears":33.0,"numPreviousSchools":3,"history":[{"school":"Riada American School","job":"English teacher and Head of Subject","from":"1/9/2011","to":"Present day","years":15.0,"isRAS":true},{"school":"Riada Language School","job":"English Teacher","from":"1/9/1999","to":"1/9/2007","years":8.0,"isRAS":false},{"school":"IGSCE at AAST","job":"Part time English Teacher","from":"1/9/2008","to":"1/9/2009","years":1.0,"isRAS":false},{"school":"AAST Community Service Center","job":"English Teacher for Adults ( Evening Classes)","from":"2001","to":"2010","years":9.0,"isRAS":false}]},{"name":"Sara Elhadary","subject":"Science","department":"Upper Elementary Dep","currentSchool":"Riada American School","currentJob":"Teacher","currentSince":"2024","yearsAtRAS":2.0,"totalYears":2.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"Teacher","from":"2024","to":"2026","years":2.0,"isRAS":true}]},{"name":"Mona Mostafa Mohammed El-Habashy","subject":"Art","department":"Lower Elementary","currentSchool":"Riada american school","currentJob":"Art teacher","currentSince":"2025","yearsAtRAS":1.0,"totalYears":1.0,"numPreviousSchools":0,"history":[{"school":"Riada american school","job":"Art teacher","from":"2025","to":"2026","years":1.0,"isRAS":true}]},{"name":"إيمان محمد أبو الريش","subject":"Arabic/Religion","department":"Lower Elementary","currentSchool":"ماريا اوزيليا تريتشى","currentJob":"Arabic Teacher","currentSince":"٢٠٠٦","yearsAtRAS":0,"totalYears":23.0,"numPreviousSchools":2,"history":[{"school":"ماريا اوزيليا تريتشى","job":"Arabic Teacher","from":"٢٠٠٦","to":"٢٠٠٧","years":null,"isRAS":false},{"school":"المدرسة الأمريكية الحديثة","job":"مدرسة اولى لغة عربيه","from":"٢٠٠٧","to":"٢٠١٩","years":19.0,"isRAS":false},{"school":"مدرسة وريال انترناشيونال","job":"مدرسة اولى لغة عربيه","from":"٢٠٢٠","to":"٢٠٢٤","years":4.0,"isRAS":false}]},{"name":"Mennahtallah hussein abdelrahman","subject":"Science","department":"Lower Elementary","currentSchool":"Riada american school","currentJob":"Assistant teacher","currentSince":"N/A","yearsAtRAS":0,"totalYears":0,"numPreviousSchools":0,"history":[{"school":"Riada american school","job":"Assistant teacher","from":"N/A","to":"N/A","years":null,"isRAS":true}]},{"name":"Nada ashraf ahmed fouad","subject":"Social Studies","department":"Lower Elementary","currentSchool":"Sidigaber language school","currentJob":"English Teacher","currentSince":"2016","yearsAtRAS":0,"totalYears":3.0,"numPreviousSchools":1,"history":[{"school":"Sidigaber language school","job":"English Teacher","from":"2016","to":"2017","years":1.0,"isRAS":false},{"school":"Egyptian English language school (E.E.L.S)","job":"English Teacher","from":"2023","to":"2025","years":2.0,"isRAS":false}]},{"name":"Lamis elsayed Ahmed","subject":"Arabic/Religion","department":"Lower Elementary","currentSchool":"Sidi gaber language school smouha","currentJob":"معلمة لغة عربية","currentSince":"2024","yearsAtRAS":0,"totalYears":11.0,"numPreviousSchools":3,"history":[{"school":"Sidi gaber language school smouha","job":"معلمة لغة عربية","from":"2024","to":"2025","years":1.0,"isRAS":false},{"school":"Innovation international school","job":"معلمة لغة عربية","from":"2020","to":"2023","years":3.0,"isRAS":false},{"school":"Sidi gaber language school girls ring road","job":"معلمة لغة عربية","from":"2018","to":"2020","years":2.0,"isRAS":false},{"school":"Elnaser salah eldin private school","job":"معلمة لغة عربية","from":"2013","to":"2018","years":5.0,"isRAS":false}]},{"name":"Nayera mahmou","subject":"French","department":"Middle School Dep","currentSchool":"Riadh nagd","currentJob":"French teacher","currentSince":"2018","yearsAtRAS":0,"totalYears":16.0,"numPreviousSchools":3,"history":[{"school":"Riadh nagd","job":"French teacher","from":"2018","to":"2019","years":1.0,"isRAS":false},{"school":"Canidian kids camp","job":"French teacher","from":"2019","to":"2020","years":1.0,"isRAS":false},{"school":"Dream castle","job":"French teacher","from":"6/2026","to":"8/2026","years":3.0,"isRAS":false},{"school":"Freelance","job":"French teacher","from":"2015","to":"2026","years":11.0,"isRAS":false}]},{"name":"Hadeer Youssef Shaat","subject":"English","department":"Lower Elementary","currentSchool":"Riada American School","currentJob":"English Teacher","currentSince":"2019","yearsAtRAS":7.0,"totalYears":9.0,"numPreviousSchools":3,"history":[{"school":"Riada American School","job":"English Teacher","from":"2019","to":"2026","years":7.0,"isRAS":true},{"school":"Gems","job":"English assisstant","from":"2016","to":"2017","years":1.0,"isRAS":false},{"school":"Brilliance","job":"English Teacher","from":"2015","to":"2016","years":1.0,"isRAS":false},{"school":"NA","job":"NA","from":"NA","to":"NA","years":null,"isRAS":false}]},{"name":"Bouran Mohamed Abdeen ElShebany","subject":"Math","department":"Lower Elementary","currentSchool":"RAS","currentJob":"Teacher Assistant","currentSince":"2024","yearsAtRAS":2.0,"totalYears":2.0,"numPreviousSchools":0,"history":[{"school":"RAS","job":"Teacher Assistant","from":"2024","to":"2026","years":2.0,"isRAS":true}]},{"name":"Nourane Gaber Mohamed","subject":"French","department":"Lower Elementary","currentSchool":"Moliere","currentJob":"French teacher assistant","currentSince":"2023","yearsAtRAS":0,"totalYears":6.0,"numPreviousSchools":2,"history":[{"school":"Moliere","job":"French teacher assistant","from":"2023","to":"2026","years":3.0,"isRAS":false},{"school":"Egyptian English language school","job":"French teacher","from":"2021","to":"2022","years":1.0,"isRAS":false},{"school":"Petit Girard","job":"French teacher","from":"2018","to":"2020","years":2.0,"isRAS":false}]},{"name":"مريم أحمد السيد","subject":"Arabic/Religion","department":"Lower Elementary","currentSchool":"Riada American School","currentJob":"Arabic language teacher (co teacher)","currentSince":"2026","yearsAtRAS":0,"totalYears":2.0,"numPreviousSchools":1,"history":[{"school":"Riada American School","job":"Arabic language teacher (co teacher)","from":"2026","to":"Present","years":null,"isRAS":true},{"school":"Sun Shine language school","job":"Arabic language teacher","from":"2024","to":"2026","years":2.0,"isRAS":false}]},{"name":"Malak Wael Saber Abdelhamid Elasyouty","subject":"English","department":"Lower Elementary","currentSchool":"I'm a fresh graduate and I'm so proud that RAS is where my teaching career officially starts.","currentJob":"I'm a fresh graduate and I'm so proud that RAS is where my teaching career officially starts.","currentSince":".....","yearsAtRAS":0,"totalYears":0,"numPreviousSchools":0,"history":[{"school":"I'm a fresh graduate and I'm so proud that RAS is where my teaching career officially starts.","job":"I'm a fresh graduate and I'm so proud that RAS is where my teaching career officially starts.","from":".....","to":".....","years":null,"isRAS":false}]},{"name":"Rowan Khaled Abdelmoneim Harb","subject":"English","department":"Lower Elementary","currentSchool":"Riada American School","currentJob":"English Teacher Assistant","currentSince":"2023","yearsAtRAS":3.0,"totalYears":3.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"English Teacher Assistant","from":"2023","to":"2026","years":3.0,"isRAS":true}]},{"name":"Rewan Ahmed Mohamed Ahmed","subject":"Arabic/Religion","department":"Lower Elementary","currentSchool":"Riada American School","currentJob":"Co Teacher Arabic","currentSince":"2026-2027","yearsAtRAS":0,"totalYears":0,"numPreviousSchools":3,"history":[{"school":"Riada American School","job":"Co Teacher Arabic","from":"2026-2027","to":"..","years":null,"isRAS":true},{"school":"..","job":"..","from":"..","to":"..","years":null,"isRAS":false},{"school":"..","job":"..","from":"..","to":"..","years":null,"isRAS":false},{"school":"..","job":"..","from":"..","to":"..","years":null,"isRAS":false}]},{"name":"Wafaa Mostafa negm","subject":"Arabic/Religion","department":"Lower Elementary","currentSchool":"Riada American school","currentJob":"Arabic teacher","currentSince":"2008","yearsAtRAS":18.0,"totalYears":23.0,"numPreviousSchools":2,"history":[{"school":"Riada American school","job":"Arabic teacher","from":"2008","to":"Now","years":18.0,"isRAS":true},{"school":"El Ramel school","job":"Arabic teacher","from":"1985","to":"1986","years":1,"isRAS":false},{"school":"El Zahraa language school","job":"Arabic Teacher","from":"2004","to":"2008","years":4.0,"isRAS":false}]},{"name":"Mariam Mohamed Ibrahim Hamada","subject":"Math","department":"Lower Elementary","currentSchool":"Riada American School","currentJob":"Teacher","currentSince":"2019","yearsAtRAS":7.0,"totalYears":7.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"Teacher","from":"2019","to":"2026","years":7.0,"isRAS":true}]},{"name":"AYA KHAMIS Mohamed","subject":"P.E","department":"Lower Elementary","currentSchool":"Riada American school","currentJob":"Teacher","currentSince":"9/2013","yearsAtRAS":14.0,"totalYears":15.0,"numPreviousSchools":1,"history":[{"school":"Riada American school","job":"Teacher","from":"9/2013","to":"9/2026","years":14.0,"isRAS":true},{"school":"Riada national school","job":"Teacher","from":"9/12","to":"9/13","years":1.0,"isRAS":false}]},{"name":"Merna Essam Mohamed","subject":"English","department":"Lower Elementary","currentSchool":"Riada American School","currentJob":"English Teacher at EELS","currentSince":"Beginning of academic year 2022-2023 (for the first two quarters)","yearsAtRAS":4.5,"totalYears":4.5,"numPreviousSchools":1,"history":[{"school":"Riada American School","job":"English Teacher at EELS","from":"Beginning of academic year 2022-2023 (for the first two quarters)","to":"First two quarters of academic year 2022-2023","years":0.5,"isRAS":true},{"school":"Riada American School starting second semester (third quarter)","job":"English Teacher","from":"2022","to":"2026","years":4.0,"isRAS":true}]},{"name":"Hasnaa Mohamed yousry Osman","subject":"Adminstration","department":"Adminstration","currentSchool":"Riada American school","currentJob":"Librarian","currentSince":"September 2006","yearsAtRAS":20.0,"totalYears":26.0,"numPreviousSchools":1,"history":[{"school":"Riada American school","job":"Librarian","from":"September 2006","to":"Till now","years":20.0,"isRAS":true},{"school":"Bibliotheca Alexandrina","job":"Librarian","from":"May1999","to":"May 2006","years":6.0,"isRAS":false}]},{"name":"Engy mohamed Ibrahem Salem","subject":"Adminstration","department":"Lower Elementary","currentSchool":"Riada American school","currentJob":"Floor supervisor","currentSince":"8 October 2023","yearsAtRAS":3.0,"totalYears":3.0,"numPreviousSchools":0,"history":[{"school":"Riada American school","job":"Floor supervisor","from":"8 October 2023","to":"2026","years":3.0,"isRAS":true}]},{"name":"randa ahmed abd el kader elgayar","subject":"Math","department":"Lower Elementary","currentSchool":"al riada american school","currentJob":"Teacher","currentSince":"2020","yearsAtRAS":6.0,"totalYears":6.0,"numPreviousSchools":0,"history":[{"school":"al riada american school","job":"Teacher","from":"2020","to":"2026","years":6.0,"isRAS":true}]},{"name":"Rana Magdy Hassan Mahdy","subject":"Computer","department":"Middle School Dep","currentSchool":"Riada American school","currentJob":"Computer Teacher","currentSince":"2025","yearsAtRAS":1.0,"totalYears":9.0,"numPreviousSchools":3,"history":[{"school":"Riada American school","job":"Computer Teacher","from":"2025","to":"2026","years":1.0,"isRAS":true},{"school":"Kaumeya International school","job":"ICT & Design teacher _ Community project Coordinator","from":"2020","to":"2025","years":5.0,"isRAS":false},{"school":"IBCA","job":"ICT & Design teacher","from":"2018","to":"2020","years":2.0,"isRAS":false},{"school":"Alexandria International school","job":"Administration","from":"2017","to":"2018","years":1.0,"isRAS":false}]},{"name":"mai mohamed ibrahim abdelaziz","subject":"N.S","department":"High School Dep","currentSchool":"sidi gaber language school","currentJob":"teacher N.s","currentSince":"2009","yearsAtRAS":0,"totalYears":17.0,"numPreviousSchools":0,"history":[{"school":"sidi gaber language school","job":"teacher N.s","from":"2009","to":"2026","years":17.0,"isRAS":false}]},{"name":"Yousra Kattaria","subject":"Math","department":"Lower Elementary","currentSchool":"Riada American School","currentJob":"Math Teacher and Coordinator","currentSince":"2011","yearsAtRAS":15.0,"totalYears":15.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"Math Teacher and Coordinator","from":"2011","to":"2026","years":15.0,"isRAS":true}]},{"name":"Aya Essam","subject":"Math","department":"High School Dep","currentSchool":"British language school","currentJob":"Maths teacher","currentSince":"2011","yearsAtRAS":0,"totalYears":14.0,"numPreviousSchools":3,"history":[{"school":"British language school","job":"Maths teacher","from":"2011","to":"2013","years":2.0,"isRAS":false},{"school":"Leaders language school","job":"Math teacher and Head of Maths department ( middle and senior)","from":"2016","to":"2026","years":10.0,"isRAS":false},{"school":"Home of knowledge language school","job":"Maths teacher","from":"2014","to":"2015","years":1.0,"isRAS":false},{"school":"Golden language school","job":"Maths teacher","from":"2015","to":"2016","years":1.0,"isRAS":false}]},{"name":"Rana Yasser Mohamed Ahmed Ahmed El Askary","subject":"Science","department":"Lower Elementary","currentSchool":"Al Riada American School","currentJob":"Science Assistant Teacher","currentSince":"2025","yearsAtRAS":1.0,"totalYears":1.0,"numPreviousSchools":0,"history":[{"school":"Al Riada American School","job":"Science Assistant Teacher","from":"2025","to":"2026 - Now","years":1.0,"isRAS":true}]},{"name":"Ola Adel Elmenebawy","subject":"English","department":"Lower Elementary","currentSchool":"Riada American School","currentJob":"Social Studies Teacher","currentSince":"2024","yearsAtRAS":2.0,"totalYears":2.0,"numPreviousSchools":1,"history":[{"school":"Riada American School","job":"Social Studies Teacher","from":"2024","to":"2026","years":2.0,"isRAS":true},{"school":"Pioneers Olympic School","job":"English Teacher","from":"2020","to":"2024","years":null,"isRAS":false}]},{"name":"Reham Mohamed Ahmed El Manakhly","subject":"English","department":"Middle School Dep","currentSchool":"Riada American School","currentJob":"Teacher","currentSince":"2024","yearsAtRAS":3.0,"totalYears":24.0,"numPreviousSchools":3,"history":[{"school":"Riada American School","job":"Teacher","from":"2024","to":"Till now","years":3.0,"isRAS":true},{"school":"El Quds Language School","job":"Assistant Head & Head of English Department","from":"2003","to":"2024","years":21.0,"isRAS":false},{"school":"None","job":"None","from":"None","to":"None","years":null,"isRAS":false},{"school":"None","job":"None","from":"None","to":"None","years":null,"isRAS":false}]},{"name":"Dalia Sayed Seif Elislam Ahmed","subject":"English","department":"High School Dep","currentSchool":"Riada American School","currentJob":"Teacher","currentSince":"2024","yearsAtRAS":3.0,"totalYears":25.0,"numPreviousSchools":3,"history":[{"school":"Riada American School","job":"Teacher","from":"2024","to":"till now","years":3.0,"isRAS":true},{"school":"El Quds Language School","job":"Head Assistant of English & Head of English Department","from":"2002","to":"2024","years":22.0,"isRAS":false},{"school":"None","job":".","from":".","to":".","years":null,"isRAS":false},{"school":"None","job":".","from":".","to":".","years":null,"isRAS":false}]},{"name":"Mohamed Issa Mohamed Mohamed","subject":"Arabic/Religion","department":"High School Dep","currentSchool":"The international school of egypt","currentJob":"Arabic teacher","currentSince":"2025","yearsAtRAS":0,"totalYears":19.0,"numPreviousSchools":3,"history":[{"school":"The international school of egypt","job":"Arabic teacher","from":"2025","to":"2026","years":1.0,"isRAS":false},{"school":"The american school of alexandria","job":"Arabic teacher","from":"2014","to":"2025","years":11.0,"isRAS":false},{"school":"brilliance american school","job":"Arabic teacher","from":"2013","to":"2014","years":1.0,"isRAS":false},{"school":"QLS - DLS - TALS","job":"Arabic teacher","from":"2007","to":"2013","years":6.0,"isRAS":false}]},{"name":"Fatema Alzahraa Mohsen","subject":"Social Studies","department":"Upper Elementary Dep","currentSchool":"Riada American School","currentJob":"Teacher of Social Studies","currentSince":"2021","yearsAtRAS":5.0,"totalYears":17.0,"numPreviousSchools":3,"history":[{"school":"Riada American School","job":"Teacher of Social Studies","from":"2021","to":"Present","years":5.0,"isRAS":true},{"school":"International Liberty School","job":"Teacher of English","from":"2014","to":"2021","years":7.0,"isRAS":false},{"school":"Brilliance International School, American Division","job":"Teacher of English","from":"2012","to":"2014","years":2.0,"isRAS":false},{"school":"Gateway Language School & Sidi Gaber language School","job":"Assistant","from":"2009","to":"2012","years":3.0,"isRAS":false}]},{"name":"Shadwa Hussein","subject":"Adminstration","department":"Adminstration","currentSchool":"Riada","currentJob":"DOA","currentSince":"1994","yearsAtRAS":32.0,"totalYears":32.0,"numPreviousSchools":0,"history":[{"school":"Riada","job":"DOA","from":"1994","to":"2016","years":32.0,"isRAS":true}]},{"name":"Doaa Ahmed shama","subject":"Adminstration","department":"Adminstration","currentSchool":"Riada American School","currentJob":"School Librarian","currentSince":"2010","yearsAtRAS":16.0,"totalYears":16.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"School Librarian","from":"2010","to":"2026","years":16.0,"isRAS":true}]},{"name":"هيثم محمد أحمد إبراهيم","subject":"Arabic/Religion","department":"High School Dep","currentSchool":"كلية سان مارك","currentJob":"Arabic Teacher","currentSince":"٢٠١١","yearsAtRAS":0,"totalYears":15.0,"numPreviousSchools":0,"history":[{"school":"كلية سان مارك","job":"Arabic Teacher","from":"٢٠١١","to":"٢٠٢٥","years":15.0,"isRAS":false}]},{"name":"امنية السيد سليمان","subject":"Adminstration","department":"Adminstration","currentSchool":"الريادة الخاصة للغات","currentJob":"مدرسة","currentSince":"١٩٩٥","yearsAtRAS":0,"totalYears":31.0,"numPreviousSchools":2,"history":[{"school":"الريادة الخاصة للغات","job":"مدرسة","from":"١٩٩٥","to":"٢٠٠٥","years":10.0,"isRAS":false},{"school":"م ماسه اباظة","job":"الريادة الامريكية","from":"٢٠٠٥","to":"٢٠٢٦","years":21.0,"isRAS":false},{"school":"جيهان هليل","job":"ادارية","from":"","to":"","years":null,"isRAS":false}]},{"name":"Lamia mortada","subject":"English","department":"Pre –K","currentSchool":"Riada American School","currentJob":"Department senior coordinator","currentSince":"2025-2026","yearsAtRAS":23.0,"totalYears":30.0,"numPreviousSchools":3,"history":[{"school":"Riada American School","job":"Department senior coordinator","from":"2025-2026","to":"Now","years":23.0,"isRAS":true},{"school":"Riada language school","job":"Teacher","from":"2003","to":"2009-2010","years":7.0,"isRAS":false},{"school":"No","job":"No","from":"No","to":"No","years":null,"isRAS":false},{"school":"No","job":"No","from":"No","to":"No","years":null,"isRAS":false}]},{"name":"Perihan Amgad Heikal","subject":"Adminstration","department":"Adminstration","currentSchool":"Riada American School","currentJob":"Educational Technology Coordinator","currentSince":"2012","yearsAtRAS":14.0,"totalYears":14.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"Educational Technology Coordinator","from":"2012","to":"Current year","years":14.0,"isRAS":true}]},{"name":"Nourhan Abdelaziz","subject":"Science","department":"Upper Elementary Dep","currentSchool":"Riada American School","currentJob":"Science teacher","currentSince":"December 2024","yearsAtRAS":3.0,"totalYears":11.0,"numPreviousSchools":2,"history":[{"school":"Riada American School","job":"Science teacher","from":"December 2024","to":"Present","years":3.0,"isRAS":true},{"school":"Kaumeya International School (IG)","job":"Science teacher","from":"August 2024","to":"December 2024","years":4.0,"isRAS":false},{"school":"United International School (IG)","job":"Lower secondary chemistry teacher (years 7/8/9)","from":"2020","to":"2024","years":4.0,"isRAS":false}]},{"name":"Nesma Ashraf Soliman","subject":"English","department":"Upper Elementary Dep","currentSchool":"Riada American School","currentJob":"English Teacher","currentSince":"2020","yearsAtRAS":6.0,"totalYears":9.0,"numPreviousSchools":2,"history":[{"school":"Riada American School","job":"English Teacher","from":"2020","to":"Present","years":6.0,"isRAS":true},{"school":"Gems Academy Alexandria","job":"Teacher Assistant","from":"2017","to":"2018","years":1.0,"isRAS":false},{"school":"Pioneers International School","job":"Teacher Assistant (1st year) - English Teacher (2nd year)","from":"2015","to":"2017","years":2.0,"isRAS":false}]},{"name":"Rowan Ahmed Salah El Din Khalil","subject":"Humanities & Social Sciences","department":"High School Dep","currentSchool":"Riada American School","currentJob":"Teacher","currentSince":"2024","yearsAtRAS":2.0,"totalYears":7.0,"numPreviousSchools":1,"history":[{"school":"Riada American School","job":"Teacher","from":"2024","to":"2026","years":2.0,"isRAS":true},{"school":"AASTMT","job":"Teaching Assistant in Finance and Accounting Department","from":"2019","to":"2024","years":5.0,"isRAS":false}]},{"name":"Hadir Said Maher","subject":"Adminstration","department":"Middle School Dep","currentSchool":"Riada American shool","currentJob":"Floor Supervisor","currentSince":"2025","yearsAtRAS":2.0,"totalYears":5.0,"numPreviousSchools":1,"history":[{"school":"Riada American shool","job":"Floor Supervisor","from":"2025","to":"Current year","years":2.0,"isRAS":true},{"school":"Sakr language school","job":"Floor Supervisor","from":"2016","to":"2018","years":3.0,"isRAS":false}]},{"name":"Nora Alii","subject":"English","department":"Middle School Dep","currentSchool":"Riada American School","currentJob":"English Teachet","currentSince":"2021","yearsAtRAS":5.0,"totalYears":5.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"English Teachet","from":"2021","to":"Till present","years":5.0,"isRAS":true}]},{"name":"Ghada Aly Elgandour","subject":"English","department":"Lower Elementary","currentSchool":"Riada American School","currentJob":"Teacher","currentSince":"2012","yearsAtRAS":13.0,"totalYears":13.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"Teacher","from":"2012","to":"2026","years":13.0,"isRAS":true}]},{"name":"Miram Yarfaa Gamal","subject":"French","department":"High School Dep","currentSchool":"Riada American School","currentJob":"French Senior Teacher","currentSince":"2010","yearsAtRAS":16.0,"totalYears":18.0,"numPreviousSchools":1,"history":[{"school":"Riada American School","job":"French Senior Teacher","from":"2010","to":"Till now","years":16.0,"isRAS":true},{"school":"EGC","job":"French Teacher","from":"2007","to":"2009","years":2.0,"isRAS":false}]},{"name":"Aya lotfy fawzy mohamed","subject":"Robotics","department":"Lower Elementary","currentSchool":"Riada american school","currentJob":"Robotics teacher","currentSince":"2025","yearsAtRAS":1.0,"totalYears":1.0,"numPreviousSchools":0,"history":[{"school":"Riada american school","job":"Robotics teacher","from":"2025","to":"2026","years":1.0,"isRAS":true}]},{"name":"Amira khaled Abdellatif","subject":"Math","department":"High School Dep","currentSchool":"Riada American school","currentJob":"Math teacher","currentSince":"2011","yearsAtRAS":15.0,"totalYears":24.0,"numPreviousSchools":3,"history":[{"school":"Riada American school","job":"Math teacher","from":"2011","to":"Till now","years":15.0,"isRAS":true},{"school":"Pioneers language school","job":"Math teacher","from":"2003","to":"2008","years":5.0,"isRAS":false},{"school":"Kaumeya language school","job":"Math teacher","from":"2008","to":"2009","years":1.0,"isRAS":false},{"school":"Quads Americn&EELSlanguage school,Sidi Gaber language school","job":"Math teacher","from":"2009","to":"2011","years":3.0,"isRAS":false}]},{"name":"Mona Hussein Elsayed Amin","subject":"English","department":"Middle School Dep","currentSchool":"Riada American School","currentJob":"English Teacher","currentSince":"2025","yearsAtRAS":1.0,"totalYears":17.0,"numPreviousSchools":3,"history":[{"school":"Riada American School","job":"English Teacher","from":"2025","to":"Till now","years":1.0,"isRAS":true},{"school":"El Quds International School","job":"English Teacher","from":"2024","to":"2025","years":1.0,"isRAS":false},{"school":"SidiGaber Language School - Girls","job":"English Teacher","from":"2010","to":"2024","years":14.0,"isRAS":false},{"school":"Helalia Language School","job":"English Teacher","from":"2008","to":"2009","years":1.0,"isRAS":false}]},{"name":"Mariam Ahmed Belal","subject":"Social Studies","department":"Middle School Dep","currentSchool":"RAS","currentJob":"Social studies teacher","currentSince":"2023","yearsAtRAS":3.0,"totalYears":8.0,"numPreviousSchools":2,"history":[{"school":"RAS","job":"Social studies teacher","from":"2023","to":"2026","years":3.0,"isRAS":true},{"school":"GEMS academy","job":"Homeroom co-teacher","from":"2019","to":"2023","years":4.0,"isRAS":false},{"school":"Kaumeya Language School","job":"Teacher assistant","from":"2018","to":"2019","years":1.0,"isRAS":false}]},{"name":"Nouran Sayed Ahmed","subject":"Arabic/Religion","department":"Upper Elementary Dep","currentSchool":"Princesses language school","currentJob":"Arabic","currentSince":"2015","yearsAtRAS":0,"totalYears":8.0,"numPreviousSchools":2,"history":[{"school":"Princesses language school","job":"Arabic","from":"2015","to":"2021","years":6.0,"isRAS":false},{"school":"Kaumya international school","job":"Arabic teacher","from":"2021","to":"2023","years":2.0,"isRAS":false},{"school":"Riada American school","job":"Arabic","from":"2023","to":"2027","years":null,"isRAS":true}]},{"name":"Bassant Salah Eldeen Elsayed Abdelkader","subject":"Science","department":"High School Dep","currentSchool":"Riada American school","currentJob":"Teacher(Biology-science teacher)","currentSince":"2025","yearsAtRAS":0,"totalYears":7.0,"numPreviousSchools":3,"history":[{"school":"Riada American school","job":"Teacher(Biology-science teacher)","from":"2025","to":"2022","years":null,"isRAS":true},{"school":"Elite International School","job":"Teacher(Myp sciences teacher)","from":"2023","to":"2025","years":2.0,"isRAS":false},{"school":"Alex dream American school","job":"Teacher (science-Biology)","from":"2021","to":"2022","years":1.0,"isRAS":false},{"school":"Egyptian American School","job":"Teacher(Biology -Chemistry -Ap biology)","from":"2018","to":"2022","years":4.0,"isRAS":false}]},{"name":"Mona Mohamed Ahmed","subject":"P.E","department":"Middle School Dep","currentSchool":"Riada American School","currentJob":"Teacher","currentSince":"2001","yearsAtRAS":1.0,"totalYears":25.0,"numPreviousSchools":2,"history":[{"school":"Riada American School","job":"Teacher","from":"2001","to":"2002","years":1.0,"isRAS":true},{"school":"EGC","job":"Teacher","from":"2002","to":"2006","years":4.0,"isRAS":false},{"school":"Taymour language School","job":"Teacher","from":"2006","to":"2026","years":20.0,"isRAS":false}]},{"name":"Hana Ahmed Elbeialy","subject":"English","department":"Upper Elementary Dep","currentSchool":"Riada American School","currentJob":"Assistant Teacher","currentSince":"17/11/2025","yearsAtRAS":1.0,"totalYears":1.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"Assistant Teacher","from":"17/11/2025","to":"now","years":1.0,"isRAS":true}]},{"name":"Ahmed Nabil Youssef Abdelraouf","subject":"Math","department":"High School Dep","currentSchool":"Riada American School","currentJob":"Math Teacher","currentSince":"2024","yearsAtRAS":2.0,"totalYears":7.0,"numPreviousSchools":1,"history":[{"school":"Riada American School","job":"Math Teacher","from":"2024","to":"2026","years":2.0,"isRAS":true},{"school":"Pioneers American School","job":"High School Math Teacher","from":"2019","to":"2024","years":5.0,"isRAS":false}]},{"name":"Rasha Ali","subject":"Adminstration","department":"Middle School Dep","currentSchool":"الريادة الامريكية","currentJob":"Floor Supervisor","currentSince":"2021","yearsAtRAS":0,"totalYears":6.0,"numPreviousSchools":0,"history":[{"school":"الريادة الامريكية","job":"Floor Supervisor","from":"2021","to":"2026","years":6.0,"isRAS":false}]},{"name":"Noha osama","subject":"Social Studies","department":"Lower Elementary","currentSchool":"Pioneers International school","currentJob":"English teacher","currentSince":"2016","yearsAtRAS":0,"totalYears":8.0,"numPreviousSchools":1,"history":[{"school":"Pioneers International school","job":"English teacher","from":"2016","to":"2017","years":2.0,"isRAS":false},{"school":"House of English","job":"English Teacher Assistant","from":"2022","to":"2022","years":6.0,"isRAS":false}]},{"name":"Hagar salman ahmed","subject":"Science","department":"High School Dep","currentSchool":"Riada American School","currentJob":"Teacher","currentSince":"2012","yearsAtRAS":14.0,"totalYears":14.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"Teacher","from":"2012","to":"2026","years":14.0,"isRAS":true}]},{"name":"Rana mostafa","subject":"French","department":"Middle School Dep","currentSchool":"Ras","currentJob":"French teacher","currentSince":"2025","yearsAtRAS":2.0,"totalYears":14.0,"numPreviousSchools":2,"history":[{"school":"Ras","job":"French teacher","from":"2025","to":"Till now","years":2.0,"isRAS":true},{"school":"Taymour english school","job":"French teacher /head of subject","from":"2013","to":"2024","years":11.0,"isRAS":false},{"school":"Alexandria american school ASA","job":"French teacher","from":"2024","to":"2025","years":1.0,"isRAS":false}]},{"name":"Passant Hassan Saad","subject":"Science","department":"Middle School Dep","currentSchool":"Riada American School","currentJob":"Science Teacher Assistant","currentSince":"September 2025","yearsAtRAS":1.0,"totalYears":1.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"Science Teacher Assistant","from":"September 2025","to":"Present","years":1.0,"isRAS":true}]},{"name":"Nermien Alshafaay","subject":"English","department":"High School Dep","currentSchool":"Riada American school","currentJob":"Middle & High School English Teacher- coordinator","currentSince":"2016","yearsAtRAS":10.0,"totalYears":14.0,"numPreviousSchools":3,"history":[{"school":"Riada American school","job":"Middle & High School English Teacher- coordinator","from":"2016","to":"Present time: 2026","years":10.0,"isRAS":true},{"school":"EELS- Alex","job":"English teacher- Head of Elementary & Middle for 1 year.","from":"2012-","to":"2015","years":3.0,"isRAS":false},{"school":"MAS- Alex.","job":"Teacher- High school English teacher.","from":"2011","to":"2012","years":1.0,"isRAS":false},{"school":"MES- Modern Education- Cairo","job":"Teacher - Middle School teacher here n National, American, & British departments.","from":"2000","to":"2010","years":null,"isRAS":false}]},{"name":"Marwa Mohamed Tawfik","subject":"Adminstration","department":"High School Dep","currentSchool":"Riada American School","currentJob":"High school Administration Assistant","currentSince":"1- 2029","yearsAtRAS":7.0,"totalYears":10.0,"numPreviousSchools":3,"history":[{"school":"Riada American School","job":"High school Administration Assistant","from":"1- 2029","to":"Current","years":7.0,"isRAS":true},{"school":"1-Egyptian American School. 2- International American School","job":"1- kg Teacher","from":"1- 2001. 2- 2002","to":"1- 2002. 2- 2003","years":1.0,"isRAS":false},{"school":"Modern American School","job":"1- Principal Assistant","from":"1 -2003","to":"1- 2012.","years":1.0,"isRAS":false},{"school":"1-Egypt English American School. 2- American School of Alexandria","job":"1-Principle Assistant. 2- pricipale Assistant","from":"1- 2012. 2- 2013","to":"1- 2013 2- 2019","years":1.0,"isRAS":false}]},{"name":"Alaa Tarek Abdel Aziz Taha Makled","subject":"French","department":"Upper Elementary Dep","currentSchool":"Riada American School","currentJob":"French teacher","currentSince":"2023","yearsAtRAS":4.0,"totalYears":8.0,"numPreviousSchools":1,"history":[{"school":"Riada American School","job":"French teacher","from":"2023","to":"2026 (Present)","years":4.0,"isRAS":true},{"school":"Liberty international school","job":"French teacher","from":"2019","to":"2023","years":4.0,"isRAS":false}]},{"name":"Lamia Mohamed Wagih Elmehelmi","subject":"Adminstration","department":"Upper Elementary Dep","currentSchool":"Riada American School","currentJob":"Riada American School","currentSince":"2012","yearsAtRAS":14.0,"totalYears":22.0,"numPreviousSchools":2,"history":[{"school":"Riada American School","job":"Riada American School","from":"2012","to":"2026","years":14.0,"isRAS":true},{"school":"US","job":"Substitute Teacher","from":"2012","to":"2014","years":2.0,"isRAS":false},{"school":"Riada Language School","job":"Teacher of English & English Coordinator","from":"1993","to":"1999","years":6.0,"isRAS":false}]},{"name":"Gihan saleh ahmed saad","subject":"Adminstration","department":"Adminstration","currentSchool":"Riada american school","currentJob":"Secretary","currentSince":"2009","yearsAtRAS":17.0,"totalYears":17.0,"numPreviousSchools":0,"history":[{"school":"Riada american school","job":"Secretary","from":"2009","to":"2026","years":17.0,"isRAS":true}]},{"name":"Nada Adel Ibrahim Metwally","subject":"Adminstration","department":"Adminstration","currentSchool":"Riada American School","currentJob":"School Event planner","currentSince":"2010","yearsAtRAS":16.0,"totalYears":16.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"School Event planner","from":"2010","to":"2026","years":16.0,"isRAS":true}]},{"name":"maha mostafa abdelaziz","subject":"Adminstration","department":"Adminstration","currentSchool":"riada american school","currentJob":"student affairs","currentSince":"2015","yearsAtRAS":11.0,"totalYears":18.0,"numPreviousSchools":2,"history":[{"school":"riada american school","job":"student affairs","from":"2015","to":"2026","years":11.0,"isRAS":true},{"school":"sidi gaber language school","job":"administration","from":"2013","to":"2015","years":2.0,"isRAS":false},{"school":"smouha","job":"teacher","from":"2008","to":"2013","years":5.0,"isRAS":false}]},{"name":"Mona Hamdy Mossad Ali Elkomy","subject":"English","department":"Lower Elementary","currentSchool":"Riada American School","currentJob":"Co/ Main Teacher","currentSince":"2025","yearsAtRAS":1.0,"totalYears":2.0,"numPreviousSchools":1,"history":[{"school":"Riada American School","job":"Co/ Main Teacher","from":"2025","to":"2026","years":1.0,"isRAS":true},{"school":"Future International School","job":"Co-Teacher","from":"2024","to":"2025","years":1.0,"isRAS":false}]},{"name":"Roa Mohamed AbdelMohsen","subject":"English","department":"Pre –K","currentSchool":"RAS","currentJob":"Teacher","currentSince":"2019","yearsAtRAS":7.0,"totalYears":14.0,"numPreviousSchools":1,"history":[{"school":"RAS","job":"Teacher","from":"2019","to":"2026","years":7.0,"isRAS":true},{"school":"Sakr Immersion School","job":"KG Teacher","from":"2012","to":"2019","years":7.0,"isRAS":false}]},{"name":"Mrs. Lakshana Hassan-HOD HS","subject":"Adminstration","department":"","currentSchool":"Riada American School","currentJob":"Head of Department: HS","currentSince":"August 2009","yearsAtRAS":17.0,"totalYears":27.0,"numPreviousSchools":3,"history":[{"school":"Riada American School","job":"Head of Department: HS","from":"August 2009","to":"Present","years":17.0,"isRAS":true},{"school":"Badr School","job":"Coordinator Early Ed. 1-5","from":"8/2005","to":"5/2009","years":5.0,"isRAS":false},{"school":"Golden Door Charter School","job":"Spec. Ed Dept./ ELA Teacher 1-5","from":"8/2002","to":"8/2005","years":4.0,"isRAS":false},{"school":"Schomburg Charter School","job":"Substitute Teacher","from":"8/2002","to":"8/2003","years":1.0,"isRAS":false}]},{"name":"Dalia Shama","subject":"Social Studies","department":"High School Dep","currentSchool":"Riada American School","currentJob":"Head of Subject and MUN Director","currentSince":"2008","yearsAtRAS":26.0,"totalYears":31.0,"numPreviousSchools":2,"history":[{"school":"Riada American School","job":"Head of Subject and MUN Director","from":"2008","to":"2026","years":26.0,"isRAS":true},{"school":"Kaumeya language school","job":"English Teacher","from":"2000","to":"2004","years":4.0,"isRAS":false},{"school":"Taymour American School","job":"English","from":"2005","to":"2006","years":1,"isRAS":false}]},{"name":"Dr. Shereen Galal","subject":"Adminstration","department":"Adminstration","currentSchool":"Riada American School","currentJob":"School Doctor","currentSince":"2014","yearsAtRAS":12.0,"totalYears":12.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"School Doctor","from":"2014","to":"Till the present.","years":12.0,"isRAS":true}]},{"name":"طلعت عبد الصمد عبد العزيز فايد","subject":"Arabic/Religion","department":"High School Dep","currentSchool":"الشهيد يوسف السباعي","currentJob":"مدرسة إعدادي","currentSince":"1999","yearsAtRAS":0,"totalYears":29.0,"numPreviousSchools":3,"history":[{"school":"الشهيد يوسف السباعي","job":"مدرسة إعدادي","from":"1999","to":"2001","years":3.0,"isRAS":false},{"school":"نهضة مصر الخاصة لغات","job":"مدرس ابتدائي","from":"2002","to":"2005","years":3.0,"isRAS":false},{"school":"فجر الإسلام الخاصة","job":"مدرس اول إعدادي","from":"2006","to":"2012","years":8.0,"isRAS":false},{"school":"مدرسة الريادة الأمريكية","job":"مدرس أول","from":"2013","to":"2027","years":15.0,"isRAS":false}]},{"name":"Christina wagdy","subject":"Arabic/Religion","department":"","currentSchool":"مدرسة الريادة الامريكيه","currentJob":"مدرس","currentSince":"2016","yearsAtRAS":0,"totalYears":10.0,"numPreviousSchools":0,"history":[{"school":"مدرسة الريادة الامريكيه","job":"مدرس","from":"2016","to":"2026","years":10.0,"isRAS":false}]},{"name":"Nadia Khaled Elgohary","subject":"English","department":"Pre –K","currentSchool":"Riada American School","currentJob":"Teacher Assistant","currentSince":"2024","yearsAtRAS":3.0,"totalYears":3.0,"numPreviousSchools":0,"history":[{"school":"Riada American School","job":"Teacher Assistant","from":"2024","to":"2026","years":3.0,"isRAS":true}]},{"name":"Rania farah","subject":"Adminstration","department":"Pre –K","currentSchool":"Reiada American school","currentJob":"Department supervisor","currentSince":"2010","yearsAtRAS":0,"totalYears":16.0,"numPreviousSchools":0,"history":[{"school":"Reiada American school","job":"Department supervisor","from":"2010","to":"2026","years":16.0,"isRAS":false}]},{"name":"Samar Hisham Radwan","subject":"Arabic/Religion","department":"Pre –K","currentSchool":"Riada American school","currentJob":"Teacher","currentSince":"2023","yearsAtRAS":6,"totalYears":11,"numPreviousSchools":2,"history":[{"school":"Riada American school","job":"Teacher","from":"2023","to":"Till now","years":3,"isRAS":true},{"school":"Riada American school","job":"Teacher","from":"2010","to":"2013","years":3,"isRAS":true},{"school":"Pioneers language school","job":"Teacher","from":"2005","to":"2010","years":5,"isRAS":false}]},{"name":"Lobna Saad El Din El Sharnouby","subject":"Social Studies","department":"Middle School Dep","currentSchool":"Future American school","currentJob":"Social studies teacher","currentSince":"2024","yearsAtRAS":0,"totalYears":6.0,"numPreviousSchools":3,"history":[{"school":"Future American school","job":"Social studies teacher","from":"2024","to":"2025","years":1.0,"isRAS":false},{"school":"Contiental International school cairo","job":"Social studies teacher","from":"2023","to":"2024","years":1.0,"isRAS":false},{"school":"Smart vision Interntional school. Cairo","job":"Social studies teacher","from":"2021","to":"2023","years":2.0,"isRAS":false},{"school":"Taymour American school","job":"Social studies teacher","from":"2019","to":"2021","years":2.0,"isRAS":false}]},{"name":"Nevine Asfour","subject":"Adminstration","department":"Adminstration","currentSchool":"Alexandria International School","currentJob":"Head of Education Technology innovation","currentSince":"1 / 9 / 2000","yearsAtRAS":0,"totalYears":31.0,"numPreviousSchools":1,"history":[{"school":"Alexandria International School","job":"Head of Education Technology innovation","from":"1 / 9 / 2000","to":"31 / 08 / 2026","years":26.0,"isRAS":false},{"school":"Extracted oil company","job":"Programmer","from":"1/ 9 / 1994","to":"31/9/ 2000","years":5.0,"isRAS":false}]}]
+
+const DEPT_COLOR = {
+  "High School Dep": "var(--dept-1)",
+  "Middle School Dep": "var(--dept-2)",
+  "Upper Elementary Dep": "var(--dept-3)",
+  "Lower Elementary": "var(--dept-4)",
+  "Pre –K": "var(--dept-5)",
+  "Administration": "var(--dept-6)",
+};
+const DEPT_ORDER = ["High School Dep","Middle School Dep","Upper Elementary Dep","Lower Elementary","Pre –K","Administration"];
+function deptColor(d){ return DEPT_COLOR[d] || "var(--muted)"; }
+function deptLabel(d){ return d === "Pre –K" ? "Pre-K" : d.replace(" Dep","").trim(); }
+
+let state = { search: "", depts: new Set(), sortKey: "totalYears", sortDir: "desc", openRow: null };
+
+function fmtYears(n){
+  if (n === null || n === undefined) return "—";
+  const rounded = Math.round(n * 10) / 10;
+  return (rounded % 1 === 0) ? rounded.toFixed(0) : rounded.toFixed(1);
+}
+
+// ---------- Stat tiles ----------
+function renderStats(){
+  const total = TEACHERS.length;
+  const avgTotal = TEACHERS.reduce((s,t)=>s+t.totalYears,0)/total;
+  const avgRAS = TEACHERS.reduce((s,t)=>s+t.yearsAtRAS,0)/total;
+  const longest = TEACHERS.reduce((a,b)=> b.totalYears > a.totalYears ? b : a);
+  const tiles = [
+    { label: "Teaching &amp; support staff", value: total, unit: "people", sub: "Deduplicated form submissions" },
+    { label: "Avg. total experience", value: fmtYears(avgTotal), unit: "yrs", sub: "Across all schools, per teacher" },
+    { label: "Avg. years at RAS", value: fmtYears(avgRAS), unit: "yrs", sub: "Current tenure at Riada American School" },
+    { label: "Longest-serving", value: fmtYears(longest.totalYears), unit: "yrs", sub: longest.name, accent: true },
+  ];
+  document.getElementById("statTiles").innerHTML = tiles.map(t => `
+    <div class="stat-tile ${t.accent ? "accent" : ""}">
+      <div class="label">${t.label}</div>
+      <div class="value">${t.value}<span class="unit">${t.unit}</span></div>
+      <div class="sub">${t.sub}</div>
+    </div>`).join("");
+}
+
+// ---------- Department bar chart ----------
+function renderDeptChart(){
+  const counts = {};
+  TEACHERS.forEach(t => counts[t.department] = (counts[t.department]||0) + 1);
+  const max = Math.max(...Object.values(counts));
+  const rows = DEPT_ORDER.filter(d => counts[d]).map(d => {
+    const c = counts[d];
+    const pct = (c / max * 100).toFixed(1);
+    return `<div class="bar-row">
+      <div class="bar-label">${deptLabel(d)}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%; background:${deptColor(d)};"><span>${c}</span></div></div>
+    </div>`;
+  }).join("");
+  document.getElementById("deptChart").innerHTML = rows + `<div class="legend">` +
+    DEPT_ORDER.filter(d=>counts[d]).map(d => `<div class="legend-item"><span class="legend-dot" style="background:${deptColor(d)}"></span>${deptLabel(d)}</div>`).join("") +
+    `</div>`;
+}
+
+// ---------- Experience histogram ----------
+function renderHistChart(){
+  const bands = [
+    { label: "0–2", test: y => y <= 2 },
+    { label: "3–5", test: y => y > 2 && y <= 5 },
+    { label: "6–10", test: y => y > 5 && y <= 10 },
+    { label: "11–15", test: y => y > 10 && y <= 15 },
+    { label: "16–20", test: y => y > 15 && y <= 20 },
+    { label: "21+", test: y => y > 20 },
+  ];
+  const counts = bands.map(b => TEACHERS.filter(t => b.test(t.totalYears)).length);
+  const max = Math.max(...counts, 1);
+  document.getElementById("histChart").innerHTML = bands.map((b,i) => {
+    const h = Math.max(counts[i] / max * 100, counts[i] > 0 ? 6 : 0);
+    return `<div class="hist-col">
+      <div class="hist-count">${counts[i]}</div>
+      <div class="hist-bar" style="height:${h}%"></div>
+      <div class="hist-label">${b.label}<br>yrs</div>
+    </div>`;
+  }).join("");
+}
+
+// ---------- Filter chips ----------
+function renderChips(){
+  document.getElementById("deptChips").innerHTML = DEPT_ORDER.map(d => `
+    <div class="dept-chip" data-dept="${d}">
+      <span class="dot" style="background:${deptColor(d)}"></span>${deptLabel(d)}
+    </div>`).join("");
+  document.querySelectorAll(".dept-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      const d = chip.dataset.dept;
+      if (state.depts.has(d)) { state.depts.delete(d); chip.classList.remove("active"); }
+      else { state.depts.add(d); chip.classList.add("active"); }
+      renderTable();
+    });
+  });
+}
+
+// ---------- Table ----------
+function getFiltered(){
+  const q = state.search.trim().toLowerCase();
+  let rows = TEACHERS.filter(t => {
+    if (state.depts.size && !state.depts.has(t.department)) return false;
+    if (!q) return true;
+    return t.name.toLowerCase().includes(q) ||
+           t.subject.toLowerCase().includes(q) ||
+           t.currentSchool.toLowerCase().includes(q) ||
+           t.history.some(h => h.school.toLowerCase().includes(q));
+  });
+  rows.sort((a,b) => {
+    let av = a[state.sortKey], bv = b[state.sortKey];
+    if (typeof av === "string") { av = av.toLowerCase(); bv = bv.toLowerCase(); }
+    let cmp = av < bv ? -1 : av > bv ? 1 : 0;
+    return state.sortDir === "asc" ? cmp : -cmp;
+  });
+  return rows;
+}
+
+function renderTable(){
+  const rows = getFiltered();
+  document.getElementById("resultCount").textContent = `${rows.length} of ${TEACHERS.length} shown`;
+  const tbody = document.getElementById("tableBody");
+  const empty = document.getElementById("emptyState");
+  if (!rows.length){
+    tbody.innerHTML = "";
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+  tbody.innerHTML = rows.map((t, i) => {
+    const rid = `r${i}`;
+    const historyRows = t.history.length ? t.history.map(h => `
+      <div class="tl-item ${h.isRAS ? "is-ras" : ""}">
+        <div class="tl-school">${h.school}${h.isRAS ? '<span class="tl-ras-tag">Riada American School</span>' : ""}</div>
+        <div class="tl-job">${h.job || "—"}</div>
+        <div class="tl-dates">${h.from || "?"} → ${h.to || "?"} &middot; ${h.years !== null ? fmtYears(h.years) + " yrs" : "duration unclear"}</div>
+      </div>`).join("") : `<div class="tl-item">No prior-school details submitted.</div>`;
+    return `
+      <tr class="teacher-row" data-row="${rid}">
+        <td class="name-cell"><span class="caret">▸</span> ${t.name}<div class="sub-line">${t.currentJob || ""}</div></td>
+        <td>${t.subject}</td>
+        <td><span class="dept-chip-cell"><span class="dot" style="background:${deptColor(t.department)}"></span>${deptLabel(t.department)}</span></td>
+        <td class="num">${fmtYears(t.yearsAtRAS)}</td>
+        <td class="num">${fmtYears(t.totalYears)}</td>
+      </tr>
+      <tr class="detail-row" data-detail="${rid}">
+        <td colspan="5">
+          <div class="detail-inner"><div class="detail-content">
+            <div class="detail-pad"><div class="timeline">${historyRows}</div></div>
+          </div></div>
+        </td>
+      </tr>`;
+  }).join("");
+
+  tbody.querySelectorAll(".teacher-row").forEach(row => {
+    row.addEventListener("click", () => {
+      const rid = row.dataset.row;
+      const detail = tbody.querySelector(`[data-detail="${rid}"]`);
+      const wasOpen = row.classList.contains("open");
+      tbody.querySelectorAll(".teacher-row.open").forEach(r => r.classList.remove("open"));
+      tbody.querySelectorAll(".detail-row.open").forEach(r => r.classList.remove("open"));
+      if (!wasOpen){ row.classList.add("open"); detail.classList.add("open"); }
+    });
+  });
+}
+
+// ---------- Sorting via headers ----------
+document.querySelectorAll("th[data-sort]").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.sort;
+    if (state.sortKey === key) state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+    else { state.sortKey = key; state.sortDir = key === "name" || key === "department" || key === "subject" ? "asc" : "desc"; }
+    document.querySelectorAll("th[data-sort]").forEach(h => h.classList.remove("active-sort"));
+    th.classList.add("active-sort");
+    document.getElementById("sortSelect").value = `${state.sortKey}-${state.sortDir}`;
+    renderTable();
+  });
+});
+
+document.getElementById("sortSelect").addEventListener("change", (e) => {
+  const [key, dir] = e.target.value.split("-");
+  state.sortKey = key; state.sortDir = dir;
+  document.querySelectorAll("th[data-sort]").forEach(h => h.classList.toggle("active-sort", h.dataset.sort === key));
+  renderTable();
+});
+
+document.getElementById("searchInput").addEventListener("input", (e) => {
+  state.search = e.target.value;
+  renderTable();
+});
+
+// ---------- Init ----------
+document.getElementById("metaCount").textContent = TEACHERS.length;
+document.getElementById("metaDate").textContent = "September 2026";
+renderStats();
+renderDeptChart();
+renderHistChart();
+renderChips();
+document.querySelector('th[data-sort="totalYears"]').classList.add("active-sort");
+renderTable();
+</script>
